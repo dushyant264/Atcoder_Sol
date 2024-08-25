@@ -54,8 +54,19 @@ int32_t main(){
     rep(i,0,n){
         cin>>wtval[i][0]>>wtval[i][1];
     }
-    vvll dp(n+1,vll(w+1,-1));
-    cout<<solve(dp,n-1,w,wtval);
+    vvll dp(n+1,vll(w+1,0));
+    vll prev(w+1,0);
+    vll curr(w+1,0);
+
+    rep(i,1,n+1){
+        rep(j,0,w+1){
+            curr[j]=prev[j]; //skip
+            if(j>=wtval[i-1][0])curr[j]=max(curr[j],prev[j-wtval[i-1][0]]+wtval[i-1][1]); //pick
+        }
+        prev=curr;
+    }
+    cout<<prev[w];
+    // cout<<solve(dp,n-1,w,wtval);
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
 return 0;}

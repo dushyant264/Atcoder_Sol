@@ -38,24 +38,39 @@ ll cdiv(const ll&a,const ll&b){return(a/b+((a^b)>0 && a%b));}
 ll fdiv(const ll&a,const ll&b){return a/b-((a^b)<0 && a%b);}
 const ll mod = 1000000007;
 // const ll mod = 998244353;
-void solve(){}
-int32_t main(){
-    ll n,w;
-    cin>>n>>w;
-    vvll wtval(n,vll(2)); // weight and value
-    rep(i,0,n){
-        cin>>wtval[i][0]>>wtval[i][1];
+const ll len = 110;
+const ll maxval = 100100;
+
+int32_t main() {
+    ll n, w;
+    cin >> n >> w;
+    vvll wtval(n, vll(2)); // Weight and Value pairs
+    rep(i, 0, n) {
+        cin >> wtval[i][0] >> wtval[i][1];
     }
 
-    vvll dp(n+1,vll(,0));
+    vll prev(maxval, 1e17),curr(maxval, 1e17);
+    prev[0] = 0;
 
-    repv(i,0,n){
-        repb(j,0,w){
-            dp[i][j]=dp[i+1][j];
-            if(j>=wtval[i][0])dp[i][j]=max(dp[i][j],wtval[i][1]+dp[i+1][j-wtval[i][0]]);
+    rep(i, 1, n+1) { // Iterate from 1 to n
+        rep(j, 0, maxval) {
+            curr[j] = prev[j];
+            if (j - wtval[i-1][1] >= 0) {
+                curr[j] = min(curr[j], wtval[i-1][0] + prev[j - wtval[i-1][1]]);
+            }
+        }
+        prev = curr;
+    }
+
+    ll ans = 0;
+    rep(j, 0, maxval) {
+        if (prev[j] <= w) {
+            ans = j;
         }
     }
-    cout<<dp[0][w];
-ios_base::sync_with_stdio(false);
-cin.tie(NULL);
-return 0;}
+
+    cout << ans << ln;
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    return 0;
+}
